@@ -1,0 +1,88 @@
+body {
+    background: #ffffff;
+    font-family: Arial;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+/* Contenedor principal */
+#ganttWrapper {
+    margin-top: 20px;
+    border: 1px solid black;
+    padding: 10px;
+    overflow-x: auto;
+    background: white;
+}
+
+/* Cuadrícula de fondo */
+#ganttGrid {
+    display: grid;
+    grid-auto-rows: 40px;
+    position: relative;
+    border-bottom: 2px solid black;
+}
+
+/* Una fila por proceso */
+.fila-proceso {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Etiqueta del proceso */
+.etiqueta {
+    width: 50px;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+/* Cada celda */
+.celda {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #dcdcdc;
+    position: relative;
+}
+
+/* Colores */
+.existencia { background: #cde3ff; }
+.ejecucion { background: #00b050; }
+.bloqueado { background: #e70000; }
+.espera { background: #d0d0d0; }
+
+/* Borde azul exterior del proceso */
+.borde-proceso {
+    border: 2px solid #0078ff !important;
+}
+
+/* Marca de llegada (X) */
+.llegada::after {
+    content: "X";
+    color: black;
+    font-weight: bold;
+    position: absolute;
+    top: 2px;
+    left: 8px;
+    font-size: 14px;
+}
+
+/* Línea de tiempo (escala inferior) */
+.escala-tiempo {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    margin-left: 60px;
+}
+
+.escala-num {
+    width: 28px;
+    text-align: center;
+    font-size: 12px;
+    color: black;
+}
