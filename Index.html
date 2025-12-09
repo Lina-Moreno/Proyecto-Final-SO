@@ -2,22 +2,105 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gráfica Gantt FCFS Multi-Fila</title>
+    <title>Simulador de Algoritmos de Planificación</title>
     <link rel="stylesheet" href="Style.css">
 </head>
 
 <body>
 
-<h1>Gráfica Gantt Multicolor - FCFS</h1>
-<button id="btnSimular">Generar Gráfica</button>
+<!-- MENU PRINCIPAL -->
+<div id="menuPrincipal">
+    <div class="menu-titulo">Algoritmos de planificación a corto plazo en un sistema multiprogramado</div>
+    <div class="menu-botones">
+        <button class="btn-menu" onclick="SimulacionManager.iniciarSimulador('FCFS')">FCFS (First Come First Served)</button>
+        <button class="btn-menu" onclick="SimulacionManager.iniciarSimulador('SJF')">SJF (Shortest Job First)</button>
+        <button class="btn-menu disabled">SRTF (Shortest Remainint Time First)</button>
+        <button class="btn-menu disabled">RR (Round Robin)</button>
+    </div>
+</div>
 
-<div id="ganttWrapper">
-    <div id="ganttGrid" class="gantt-grid"></div>
-    <div id="escalaTiempo" class="escala-tiempo"></div>
+<!-- SIMULADOR -->
+<div id="simulador">
+    <div class="header-simulador">
+        <h1 id="tituloAlgoritmo">FCFS</h1>
+        <button class="btn-volver" onclick="SimulacionManager.volverMenu()">Volver</button>
+    </div>
+
+    <div class="controles">
+        <button class="btn-control btn-primary" id="btnPlay" onclick="SimulacionManager.toggleSimulacion()">Iniciar</button>
+        <button class="btn-control btn-secondary" id="btnAgregarProceso" onclick="ModalManager.abrirModalProceso()">Agregar Proceso</button>
+        <button class="btn-control btn-danger" id="btnReiniciar" onclick="SimulacionManager.reiniciarSimulacion()">Reiniciar</button>
+        <div class="info-tiempo">Tiempo: <span id="tiempoActual">0</span></div>
+    </div>
+
+    <!-- PROCESOS PREDEFINIDOS -->
+    <div class="procesos-predefinidos">
+        <h3>Procesos Predefinidos:</h3>
+        <div class="lista-predefinidos" id="listaProcesosPredefinidos">
+        </div>
+    </div>
+    
+    <div class="procesos-predefinidos">
+        <h3>Procesos Personalizados:</h3>
+        <div class="lista-predefinidos" id="listaProcesosPersonalizados">
+        </div>
+    </div>
+
+    <div class="cola-procesos">
+        <h3>Cola de procesos listos:</h3>
+        <div class="cola-contenido" id="colaVisualizacion">
+            <span class="cola-vacia">Vacía</span>
+        </div>
+    </div>
+
+    <div id="ganttWrapper">
+        <div id="ganttGrid" class="gantt-grid"></div>
+        <div id="escalaTiempo" class="escala-tiempo"></div>
+    </div>
+
+    <div class="estado-simulacion" id="estadoSimulacion"></div>
+</div>
+
+<!-- MODAL AGREGAR PROCESO -->
+<div id="modalProceso" class="modal">
+    <div class="modal-content">
+        <h2>Agregar Proceso</h2>
+        <form id="formProceso">
+            <div class="form-group">
+                <label>Nombre del Proceso:</label>
+                <input type="text" id="inputNombre" placeholder="Ej: G" maxlength="5" required>
+            </div>
+            <div class="form-group">
+                <label>Tiempo de Llegada:</label>
+                <input type="number" id="inputLlegada" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Tiempo de Ejecución (ráfaga):</label>
+                <input type="number" id="inputRafaga" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>Inicio de Bloqueo (opcional):</label>
+                <input type="number" id="inputInicioBloqueo" min="0">
+            </div>
+            <div class="form-group">
+                <label>Duración de Bloqueo (opcional):</label>
+                <input type="number" id="inputDuracionBloqueo" min="0">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-guardar" onclick="ModalManager.guardarProceso()">Guardar</button>
+                <button type="button" class="btn-cancelar" onclick="ModalManager.cerrarModalProceso()">Cancelar</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="Proceso.js"></script>
+<script src="SimuladorBase.js"></script>
 <script src="SimuladorFCFS.js"></script>
+<script src="DataManager.js"></script>
+<script src="InterfaceManager.js"></script>
+<script src="ModalManager.js"></script>
+<script src="SimulacionManager.js"></script>
 <script src="Main.js"></script>
 
 </body>
