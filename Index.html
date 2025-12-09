@@ -14,7 +14,7 @@
     <div class="menu-botones">
         <button class="btn-menu" onclick="SimulacionManager.iniciarSimulador('FCFS')">FCFS (First Come First Served)</button>
         <button class="btn-menu" onclick="SimulacionManager.iniciarSimulador('SJF')">SJF (Shortest Job First)</button>
-        <button class="btn-menu disabled">SRTF (Shortest Remainint Time First)</button>
+        <button class="btn-menu" onclick="SimulacionManager.iniciarSimulador('SRTF')">SRTF (Shortest Remaining Time First)</button>
         <button class="btn-menu disabled">RR (Round Robin)</button>
     </div>
 </div>
@@ -98,6 +98,7 @@
 <script src="SimuladorBase.js"></script>
 <script src="SimuladorFCFS.js"></script>
 <script src="SimuladorSJF.js"></script>
+<script src="SimuladorSRTF.js"></script>
 <script src="DataManager.js"></script>
 <script src="InterfaceManager.js"></script>
 <script src="ModalManager.js"></script>

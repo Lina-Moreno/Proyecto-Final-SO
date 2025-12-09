@@ -30,15 +30,6 @@ static actualizarGantt(simulador) {
         etiquetaDiv.className = 'etiqueta';
         etiquetaDiv.textContent = proceso.id;
         
-        const infoSpan = document.createElement('span');
-        infoSpan.style.fontSize = '10px';
-        infoSpan.style.display = 'block';
-        infoSpan.textContent = `L:${proceso.tiempoLlegada} R:${proceso.tiempoRafaga}`;
-        if (proceso.inicioBloqueo > 0) {
-            infoSpan.textContent += ` B@${proceso.inicioBloqueo}×${proceso.duracionBloqueo}`;
-        }
-        etiquetaDiv.appendChild(infoSpan);
-        
         filaDiv.appendChild(etiquetaDiv);
         
         // Crear celdas para cada unidad de tiempo
@@ -122,12 +113,7 @@ static actualizarEscalaTiempo(maxTiempo) {
                 infoDiv.textContent = proceso.id;
                 infoDiv.style.fontWeight = 'bold';
                 
-                const detalleDiv = document.createElement('div');
-                detalleDiv.style.fontSize = '10px';
-                detalleDiv.textContent = `R:${proceso.tiempoRestante} E:${proceso.tiempoEspera}`;
-                
                 procesoDiv.appendChild(infoDiv);
-                procesoDiv.appendChild(detalleDiv);
                 colaDiv.appendChild(procesoDiv);
             });
         }

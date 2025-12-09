@@ -296,14 +296,18 @@ static crearSimulador(algoritmo) {
     switch(algoritmo) {
         case 'FCFS':
             return new SimuladorFCFS();
+        
         case 'SJF':
             return new SimuladorSJF();
+        
         case 'SRTF':
             return new SimuladorSRTF();
+        
         case 'RR':
-            return new SimuladorRR();
+            alert('Round Robin aún no está implementado');
+            return null;
+        
         default:
-            console.warn(`Algoritmo '${algoritmo}' no reconocido, usando FCFS`);
             return new SimuladorFCFS();
     }
 }
