@@ -2,8 +2,8 @@ class SimulacionManager {
     static simulador = null;
     static tiempoIntervalo = null;
     static simulacionEnCurso = false;
-    static procesosAgregados = new Set(); // IDs de procesos en simulación
-    static procesosEnInventario = new Map(); // TODOS los procesos disponibles
+    static procesosAgregados = new Set();
+    static procesosEnInventario = new Map();
 
 static iniciarSimulador(algoritmo) {
     console.log('Iniciando simulador con algoritmo:', algoritmo);
@@ -12,24 +12,22 @@ static iniciarSimulador(algoritmo) {
     document.getElementById('simulador').style.display = 'block';
     document.getElementById('tituloAlgoritmo').textContent = algoritmo;
     
-    // ✅ Usar el método centralizado
     this.simulador = this.crearSimulador(algoritmo);
     
     this.procesosAgregados.clear();
     this.actualizarInterfaz();
 }
+
     static volverMenu() {
         this.detenerSimulacion();
         document.getElementById('menuPrincipal').style.display = 'flex';
         document.getElementById('simulador').style.display = 'none';
         this.simulador = null;
         this.procesosAgregados.clear();
-        this.procesosEnInventario.clear(); // ✅ Limpiar inventario también
+        this.procesosEnInventario.clear();
     }
 
-    // Método para solo guardar en inventario (NO en simulación)
     static agregarProcesoAlInventario(proceso) {
-        // Verificar que no exista ya
         if (this.procesosEnInventario.has(proceso.id)) {
             alert(`Ya existe un proceso con ID ${proceso.id}`);
             return false;
@@ -41,7 +39,6 @@ static iniciarSimulador(algoritmo) {
         return true;
     }
 
-    // Método para agregar a simulación (al hacer clic en botón)
     static agregarProcesoASimulacion(id) {
         if (!this.simulador) {
             alert('Por favor inicia un simulador primero');
@@ -59,7 +56,6 @@ static iniciarSimulador(algoritmo) {
             return false;
         }
         
-        // Clonar el proceso para no modificar el original
         const procesoParaSimular = new Proceso(
             proceso.id,
             proceso.tiempoLlegada,
@@ -78,7 +74,6 @@ static iniciarSimulador(algoritmo) {
         return false;
     }
 
-    // Agregar proceso predefinido directamente a la simulación
 static agregarProcesoPredefinido(id) {
     console.log('Agregando proceso predefinido:', id);
     
@@ -92,15 +87,12 @@ static agregarProcesoPredefinido(id) {
         return;
     }
     
-    // Obtener el proceso desde DataManager (siempre fresco)
     const proceso = DataManager.getProcesoPredefinido(id);
     if (proceso) {
-        // Primero agregar al inventario si no está
         if (!this.procesosEnInventario.has(id)) {
             this.procesosEnInventario.set(id, proceso);
         }
         
-        // Crear una NUEVA instancia del proceso (importante para reinicios)
         const procesoNuevo = new Proceso(
             proceso.id,
             proceso.tiempoLlegada,
@@ -112,13 +104,8 @@ static agregarProcesoPredefinido(id) {
         const agregado = this.simulador.agregarProceso(procesoNuevo);
         if (agregado) {
             this.procesosAgregados.add(id);
-            
-            // Actualizar botones INMEDIATAMENTE
             this.actualizarBotonesPredefinidos();
-            
-            // Actualizar interfaz
             this.actualizarInterfaz();
-            
             console.log(`Proceso ${id} agregado correctamente`);
         } else {
             console.warn(`No se pudo agregar el proceso ${id}`);
@@ -129,7 +116,7 @@ static agregarProcesoPredefinido(id) {
     static actualizarInterfaz() {
         this.actualizarBotonesPredefinidos();
         InterfaceManager.actualizarListaProcesosPersonalizados(
-            this.procesosEnInventario, // ✅ Usar Map, no array
+            this.procesosEnInventario,
             this.procesosAgregados
         );
         
@@ -140,17 +127,12 @@ static agregarProcesoPredefinido(id) {
     }
 
 static actualizarBotonesPredefinidos() {
-    // Obtener TODOS los botones de procesos predefinidos
     const botones = document.querySelectorAll('[id^="btnProc"]');
     
     botones.forEach(btn => {
-        // Extraer el ID del proceso del ID del botón (ej: "btnProcA" -> "A")
         const idProceso = btn.id.replace('btnProc', '');
-        
-        // Verificar si este proceso YA está en la simulación
         btn.disabled = this.procesosAgregados.has(idProceso);
         
-        // Agregar estilo visual para que sea obvio cuando está deshabilitado
         if (btn.disabled) {
             btn.style.opacity = '0.6';
             btn.style.cursor = 'not-allowed';
@@ -246,42 +228,30 @@ static actualizarBotonesPredefinidos() {
 static reiniciarSimulacion() {
     console.log('Reiniciando simulación');
     
-    // 1. Detener simulación
     this.detenerSimulacion();
     this.simulacionEnCurso = false;
     
-    // 2. Limpiar SOLO los procesos agregados
-    //    (mantener procesosEnInventario para conservar los personalizados)
     this.procesosAgregados.clear();
     console.log('✅ procesosAgregados limpiado');
     
-    // 3. Crear nuevo simulador del MISMO tipo
     const algoritmo = document.getElementById('tituloAlgoritmo').textContent;
     this.simulador = this.crearSimulador(algoritmo);
     console.log(`✅ Nuevo simulador ${algoritmo} creado`);
     
-    // 4. Resetear controles de UI
     document.getElementById('tiempoActual').textContent = '0';
     document.getElementById('btnPlay').textContent = 'Iniciar';
     document.getElementById('btnPlay').disabled = false;
     document.getElementById('btnAgregarProceso').disabled = false;
     document.getElementById('estadoSimulacion').textContent = 'Simulación reiniciada - Agrega procesos';
     
-    // 5. Recargar botones predefinidos
     DataManager.cargarProcesosPredefinidosEnUI();
     
-    // 6. Actualizar interfaz completa después de cargar botones
     setTimeout(() => {
-        // ❌ NO llamar actualizarBotonesPredefinidos() aquí
-        //    porque DataManager ya lo hace internamente
-        
-        // Actualizar lista de procesos personalizados
         InterfaceManager.actualizarListaProcesosPersonalizados(
             this.procesosEnInventario,
-            this.procesosAgregados // ← Ahora está vacío, botones se habilitan
+            this.procesosAgregados
         );
         
-        // Actualizar visualizaciones
         InterfaceManager.actualizarGantt(this.simulador);
         InterfaceManager.actualizarCola(this.simulador);
         
@@ -291,7 +261,6 @@ static reiniciarSimulacion() {
     console.log('🔄 Simulación reiniciada correctamente');
 }
 
-// AGREGAR este método auxiliar:
 static crearSimulador(algoritmo) {
     switch(algoritmo) {
         case 'FCFS':
@@ -304,8 +273,7 @@ static crearSimulador(algoritmo) {
             return new SimuladorSRTF();
         
         case 'RR':
-            alert('Round Robin aún no está implementado');
-            return null;
+            return new SimuladorRR();
         
         default:
             return new SimuladorFCFS();

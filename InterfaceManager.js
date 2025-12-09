@@ -15,7 +15,7 @@ static actualizarGantt(simulador) {
         return;
     }
     
-    // ✅ Invertir orden: último agregado aparece arriba
+    // Invertir orden: último agregado aparece arriba
     const procesosOrdenados = [...simulador.todosLosProcesos].reverse();
     
     let tiempoMax = Math.max(simulador.tiempoActual, 30);
@@ -73,6 +73,42 @@ static actualizarGantt(simulador) {
         ganttGrid.appendChild(filaDiv);
     });
     
+    // Crear fila del DESPACHADOR (S) - solo para RR
+    if (simulador.constructor.name === 'SimuladorRR') {
+        const filaDespachador = document.createElement('div');
+        filaDespachador.className = 'fila-proceso';
+        
+        // Etiqueta del despachador
+        const etiquetaDiv = document.createElement('div');
+        etiquetaDiv.className = 'etiqueta despachador';
+        etiquetaDiv.textContent = 'S';
+        etiquetaDiv.style.backgroundColor = '#2196F3';
+        etiquetaDiv.style.color = 'white';
+        
+        filaDespachador.appendChild(etiquetaDiv);
+        
+        // Crear celdas para cada unidad de tiempo
+        for (let tiempo = 0; tiempo < tiempoMax; tiempo++) {
+            const celdaDiv = document.createElement('div');
+            celdaDiv.className = 'celda';
+            
+            // Buscar si hay un evento de DESPACHADOR en este tiempo
+            const esDespachador = simulador.ganttChart.some(ev => 
+                ev.instante === tiempo && ev.estado === 'DESPACHADOR'
+            );
+            
+            if (esDespachador) {
+                celdaDiv.classList.add('despachador');
+                celdaDiv.style.backgroundColor = '#2196F3';
+                celdaDiv.title = `T=${tiempo}: DESPACHADOR (cambio de proceso)`;
+            }
+            
+            filaDespachador.appendChild(celdaDiv);
+        }
+        
+        ganttGrid.appendChild(filaDespachador);
+    }
+    
     // Actualizar escala de tiempo
     this.actualizarEscalaTiempo(tiempoMax);
 }
@@ -84,7 +120,6 @@ static actualizarEscalaTiempo(maxTiempo) {
     escalaDiv.innerHTML = '';
     
     // Crear números desde 0 hasta maxTiempo (inclusive)
-    // Esto pone un número en cada borde, no en el centro de cada celda
     for (let i = 0; i <= maxTiempo; i++) {
         const numDiv = document.createElement('div');
         numDiv.className = 'escala-num';
@@ -92,30 +127,72 @@ static actualizarEscalaTiempo(maxTiempo) {
         escalaDiv.appendChild(numDiv);
     }
 }
+
+    /**
+     * Actualizar cola - Muestra cola unificada (listos + bloqueados)
+     */
     static actualizarCola(simulador) {
         const colaDiv = document.getElementById('colaVisualizacion');
         if (!colaDiv || !simulador) return;
         
         colaDiv.innerHTML = '';
         
-        if (simulador.colaListos.length === 0) {
-            const span = document.createElement('span');
-            span.className = 'cola-vacia';
-            span.textContent = 'Vacía';
-            colaDiv.appendChild(span);
-        } else {
-            // Mostrar información del proceso en la cola
-            simulador.colaListos.forEach(proceso => {
+        // Para RR: mostrar toda la cola unificada
+        if (simulador.constructor.name === 'SimuladorRR') {
+            if (simulador.cola.length === 0) {
+                const span = document.createElement('span');
+                span.className = 'cola-vacia';
+                span.textContent = 'Vacía';
+                colaDiv.appendChild(span);
+                return;
+            }
+            
+            // Mostrar cada proceso en el orden de la cola
+            simulador.cola.forEach(p => {
                 const procesoDiv = document.createElement('div');
                 procesoDiv.className = 'proceso-cola';
                 
-                const infoDiv = document.createElement('div');
-                infoDiv.textContent = proceso.id;
-                infoDiv.style.fontWeight = 'bold';
+                const estaBloqueado = simulador.infoBloqueados.has(p.id);
                 
-                procesoDiv.appendChild(infoDiv);
+                if (estaBloqueado) {
+                    const tiempoDesbloqueo = simulador.infoBloqueados.get(p.id);
+                    procesoDiv.style.backgroundColor = '#ff5252';
+                    procesoDiv.style.color = 'white';
+                    procesoDiv.title = `${p.id} - Bloqueado hasta t=${tiempoDesbloqueo}`;
+                    
+                    const infoDiv = document.createElement('div');
+                    infoDiv.innerHTML = `<strong>${p.id}</strong><br><small>Bloq. @${tiempoDesbloqueo}</small>`;
+                    procesoDiv.appendChild(infoDiv);
+                } else {
+                    procesoDiv.title = `${p.id} - Listo`;
+                    
+                    const infoDiv = document.createElement('div');
+                    infoDiv.innerHTML = `<strong>${p.id}</strong>`;
+                    procesoDiv.appendChild(infoDiv);
+                }
+                
                 colaDiv.appendChild(procesoDiv);
             });
+        } else {
+            // Para otros algoritmos, solo mostrar cola de listos
+            if (simulador.colaListos.length === 0) {
+                const span = document.createElement('span');
+                span.className = 'cola-vacia';
+                span.textContent = 'Vacía';
+                colaDiv.appendChild(span);
+            } else {
+                simulador.colaListos.forEach(proceso => {
+                    const procesoDiv = document.createElement('div');
+                    procesoDiv.className = 'proceso-cola';
+                    
+                    const infoDiv = document.createElement('div');
+                    infoDiv.textContent = proceso.id;
+                    infoDiv.style.fontWeight = 'bold';
+                    
+                    procesoDiv.appendChild(infoDiv);
+                    colaDiv.appendChild(procesoDiv);
+                });
+            }
         }
     }
 
