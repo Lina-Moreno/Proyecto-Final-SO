@@ -385,15 +385,6 @@
     height: 8px;
     background: #666;
 }
-
-/* Línea más gruesa cada 5 unidades */
-.escala-num:nth-child(5n+1)::before {
-    height: 12px;
-    width: 2px;
-    background: #333;
-    top: -12px;
-}
-
         .estado-simulacion {
             font-size: 12px;
             color: #666;
