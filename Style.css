@@ -1,369 +1,382 @@
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            background: #ffffff;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
+body {
+    background: #ffffff;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
 
-        /* MENU PRINCIPAL */
-        #menuPrincipal {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            gap: 20px;
-        }
+/* MENU PRINCIPAL */
+#menuPrincipal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 20px;
+}
 
-        .menu-titulo {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
+.menu-titulo {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
 
-        .menu-botones {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+.menu-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
-        .btn-menu {
-            padding: 15px 40px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background: #0078ff;
-            color: white;
-            min-width: 250px;
-            transition: background 0.3s;
-        }
+.btn-menu {
+    padding: 15px 40px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #0078ff;
+    color: white;
+    min-width: 250px;
+    transition: background 0.3s;
+}
 
-        .btn-menu:hover { background: #0056b3; }
-        .btn-menu.disabled { background: #cccccc; cursor: not-allowed; }
+.btn-menu:hover { background: #0056b3; }
+.btn-menu.disabled { background: #cccccc; cursor: not-allowed; }
 
-        /* SIMULADOR */
-        #simulador { display: none; }
+/* SIMULADOR */
+#simulador { display: none; }
 
-        .header-simulador {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #0078ff;
-            padding-bottom: 10px;
-            position: relative;
-        }
+.header-simulador {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #0078ff;
+    padding-bottom: 10px;
+    position: relative;
+}
 
-        .header-simulador h1 {
-            font-size: 24px;
-            flex: 1;
-            text-align: center;
-        }
+.header-simulador h1 {
+    font-size: 24px;
+    flex: 1;
+    text-align: center;
+}
 
-        .btn-volver {
-            padding: 8px 20px;
-            background: #666;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            position: absolute;
-            right: 0;
-        }
+.btn-volver {
+    padding: 8px 20px;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+}
 
-        .btn-volver:hover { background: #444; }
+.btn-volver:hover { background: #444; }
 
-        /* CONTROLES */
-        .controles {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+/* CONTROLES */
+.controles {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
 
-        .btn-control {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s;
-        }
+.btn-control {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
 
-        .btn-primary { background: #00b050; color: white; }
-        .btn-primary:hover { background: #008040; }
-        .btn-primary:disabled { background: #cccccc; cursor: not-allowed; }
+.btn-primary { background: #00b050; color: white; }
+.btn-primary:hover { background: #008040; }
+.btn-primary:disabled { background: #cccccc; cursor: not-allowed; }
 
-        .btn-secondary { background: #0078ff; color: white; }
-        .btn-secondary:hover { background: #0056b3; }
-        .btn-secondary:disabled { background: #cccccc; cursor: not-allowed; }
+.btn-secondary { background: #0078ff; color: white; }
+.btn-secondary:hover { background: #0056b3; }
+.btn-secondary:disabled { background: #cccccc; cursor: not-allowed; }
 
-        .btn-danger { background: #e70000; color: white; }
-        .btn-danger:hover { background: #b30000; }
+.btn-danger { background: #e70000; color: white; }
+.btn-danger:hover { background: #b30000; }
 
-        .info-tiempo {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0078ff;
-        }
+.info-tiempo {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0078ff;
+}
 
-        /* MODAL */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
 
-        .modal.mostrar {
-            display: flex;
-        }
+.modal.mostrar {
+    display: flex;
+}
 
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 90%;
-        }
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+}
 
-        .modal-content h2 { margin-bottom: 20px; }
+.modal-content h2 { margin-bottom: 20px; }
 
-        .form-group { margin-bottom: 15px; }
+.form-group { margin-bottom: 15px; }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
 
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 14px;
-        }
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+}
 
-        .form-group input:focus {
-            outline: none;
-            border-color: #0078ff;
-        }
+.form-group input:focus {
+    outline: none;
+    border-color: #0078ff;
+}
 
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
 
-        .form-actions button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 14px;
-        }
+.form-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
 
-        .form-actions .btn-guardar { background: #00b050; color: white; }
-        .form-actions .btn-cancelar { background: #e70000; color: white; }
+.form-actions .btn-guardar { background: #00b050; color: white; }
+.form-actions .btn-cancelar { background: #e70000; color: white; }
 
-        /* PROCESOS */
-        .procesos-predefinidos {
-            margin-bottom: 15px;
-        }
+/* ✅ CONTENEDOR DE TABLAS LADO A LADO */
+.contenedor-tablas-procesos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
 
-        .procesos-predefinidos h3 {
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
+@media (max-width: 1400px) {
+    .contenedor-tablas-procesos {
+        grid-template-columns: 1fr;
+    }
+}
 
-        .lista-predefinidos {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+/* PROCESOS */
+.procesos-predefinidos {
+    margin-bottom: 15px;
+}
 
-        .btn-proceso-predefinido {
-            padding: 6px 12px;
-            background: #f0f0f0;
-            border: 1px solid #999;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-        }
+.procesos-predefinidos h3 {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
 
-        .btn-proceso-predefinido:hover { background: #e0e0e0; }
-        .btn-proceso-predefinido:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
+.lista-predefinidos {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
 
-        /*Procesos Disponibles */
-        .procesos-disponibles {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border: 2px solid #0078ff;
-            border-radius: 5px;
-        }
+.btn-proceso-predefinido {
+    padding: 6px 12px;
+    background: #f0f0f0;
+    border: 1px solid #999;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
 
-        .procesos-disponibles h3 {
-            margin-bottom: 10px;
-            font-size: 16px;
-            color: #0078ff;
-        }
+.btn-proceso-predefinido:hover { background: #e0e0e0; }
+.btn-proceso-predefinido:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
 
-        #listaProcesosDisponibles {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+/*Procesos Disponibles */
+.procesos-disponibles {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 2px solid #0078ff;
+    border-radius: 5px;
+}
 
-        .proceso-disponible {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-        }
+.procesos-disponibles h3 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #0078ff;
+}
 
-        .btn-agregar-sim {
-            padding: 5px 15px;
-            background: #00b050;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-        }
+#listaProcesosDisponibles {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 
-        .btn-agregar-sim:hover { background: #008040; }
-        .btn-agregar-sim:disabled {
-            background: #999;
-            cursor: not-allowed;
-        }
+.proceso-disponible {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
 
-        /* COLA DE PROCESOS */
-        .cola-procesos {
-            margin-bottom: 20px;
-            padding: 12px;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-        }
+.btn-agregar-sim {
+    padding: 5px 15px;
+    background: #00b050;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
 
-        .cola-procesos h3 {
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
+.btn-agregar-sim:hover { background: #008040; }
+.btn-agregar-sim:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
 
-        .cola-contenido {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            min-height: 25px;
-            align-items: center;
-        }
+/* COLA DE PROCESOS */
+.cola-procesos {
+    margin-bottom: 20px;
+    padding: 12px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
 
-        .proceso-cola {
-            padding: 4px 8px;
-            background: #d0d0d0;
-            border: 1px solid #999;
-            border-radius: 3px;
-            font-size: 12px;
-            font-weight: bold;
-        }
+.cola-procesos h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
 
-        .cola-vacia {
-            color: #999;
-            font-style: italic;
-            font-size: 12px;
-        }
+.cola-contenido {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    min-height: 25px;
+    align-items: center;
+}
 
-        /* GANTT */
-        #ganttWrapper {
-            margin-top: 20px;
-            border: 1px solid black;
-            padding: 10px;
-            overflow-x: auto;
-            background: white;
-        }
+.proceso-cola {
+    padding: 4px 8px;
+    background: #d0d0d0;
+    border: 1px solid #999;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
 
-        #ganttGrid {
-            display: grid;
-            grid-auto-rows: 40px;
-            position: relative;
-            border-bottom: 2px solid black;
-        }
+.cola-vacia {
+    color: #999;
+    font-style: italic;
+    font-size: 12px;
+}
 
-        .fila-proceso {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
+/* GANTT */
+#ganttWrapper {
+    margin-top: 20px;
+    border: 1px solid black;
+    padding: 10px;
+    overflow-x: auto;
+    background: white;
+}
 
-        .etiqueta {
-            width: 50px;
-            font-weight: bold;
-            font-size: 16px;
-            text-align: right;
-            padding-right: 10px;
-        }
+#ganttGrid {
+    display: grid;
+    grid-auto-rows: 40px;
+    position: relative;
+    border-bottom: 2px solid black;
+}
 
-        .celda {
-            width: 28px;
-            height: 28px;
-            border: 1px solid #dcdcdc;
-            position: relative;
-        }
+.fila-proceso {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 
-        .existencia { background: #cde3ff; }
-        .ejecucion { background: #00b050; }
-        .bloqueado { background: #e70000; }
-        .espera { background: #d0d0d0; }
+.etiqueta {
+    width: 50px;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: right;
+    padding-right: 10px;
+}
 
-        .borde-proceso { border: 2px solid #0078ff !important; }
+.celda {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #dcdcdc;
+    position: relative;
+}
 
-        .llegada::after {
-            content: "X";
-            color: black;
-            font-weight: bold;
-            position: absolute;
-            top: 2px;
-            left: 8px;
-            font-size: 14px;
-        }
+.existencia { background: #cde3ff; }
+.ejecucion { background: #00b050; }
+.bloqueado { background: #e70000; }
+.espera { background: #d0d0d0; }
 
-/* ESCALA DE TIEMPO - NÚMEROS CON LÍNEAS DIVISORIAS */
+.borde-proceso { border: 2px solid #0078ff !important; }
+
+.llegada::after {
+    content: "X";
+    color: black;
+    font-weight: bold;
+    position: absolute;
+    top: 2px;
+    left: 8px;
+    font-size: 14px;
+}
+
+/* ESCALA DE TIEMPO (ORIGINAL SIN CAMBIOS) */
 .escala-tiempo {
     display: flex;
     flex-direction: row;
     margin-top: 8px;
-    margin-left: 60px; /* Compensa .etiqueta (50px + 10px padding) */
+    margin-left: 60px;
     position: relative;
     height: 30px;
-    left: -10px; /* Ajuste fino para alinear el 0 con el borde inicial */
 }
 
 .escala-num {
-    width: 28px; /* Mismo ancho que .celda */
+    width: 28px;
     min-width: 28px;
     max-width: 28px;
     text-align: left;
@@ -372,24 +385,13 @@
     color: black;
     box-sizing: border-box;
     flex-shrink: 0;
-    position: relative;
 }
 
-/* Línea vertical antes de cada número */
-.escala-num::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: -8px;
-    width: 1px;
-    height: 8px;
-    background: #666;
+.estado-simulacion {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
 }
-        .estado-simulacion {
-            font-size: 12px;
-            color: #666;
-            margin-top: 10px;
-        }
 
 /* TABLAS DE PROCESOS */
 .procesos-predefinidos {
@@ -486,14 +488,71 @@
     border: 1px dashed #ddd;
 }
 
+/* ✅ TABLA DE ESTADÍSTICAS */
+.tabla-estadisticas {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    border-radius: 5px;
+    overflow: hidden;
+    font-size: 12px;
+}
+
+.tabla-estadisticas thead {
+    background: #4CAF50;
+    color: white;
+}
+
+.tabla-estadisticas th {
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 11px;
+    border-right: 1px solid rgba(255,255,255,0.3);
+    line-height: 1.3;
+}
+
+.tabla-estadisticas th:last-child {
+    border-right: none;
+}
+
+.tabla-estadisticas tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background 0.2s;
+}
+
+.tabla-estadisticas tbody tr:hover {
+    background: #f0f8f0;
+}
+
+.tabla-estadisticas tbody tr:last-child {
+    border-bottom: none;
+}
+
+.tabla-estadisticas td {
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+    color: #333;
+    font-weight: 500;
+}
+
+.tabla-estadisticas td:first-child {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
 /* Responsive para tablas pequeñas */
 @media (max-width: 768px) {
-    .tabla-procesos {
+    .tabla-procesos, .tabla-estadisticas {
         font-size: 11px;
     }
     
     .tabla-procesos th,
-    .tabla-procesos td {
+    .tabla-procesos td,
+    .tabla-estadisticas th,
+    .tabla-estadisticas td {
         padding: 8px 4px;
     }
     
@@ -501,8 +560,7 @@
         padding: 5px 12px;
         font-size: 11px;
     }
-
-/* Agregar estos estilos al archivo Style.css existente */
+}
 
 /* Estilo para la fila del despachador (S) */
 .fila-proceso .etiqueta.despachador {
@@ -542,14 +600,4 @@
     padding: 10px;
     background-color: #f5f5f5;
     border-radius: 8px;
-}
-
-/* Asegurar que las celdas del despachador sean visibles */
-.fila-proceso:last-child {
-    border-top: 2px solid #2196F3;
-    padding-top: 5px;
-    margin-top: 5px;
-}
-
-
 }

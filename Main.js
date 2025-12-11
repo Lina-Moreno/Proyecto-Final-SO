@@ -18,7 +18,6 @@ class Main {
             console.log('Aplicación inicializada correctamente');
         } catch (error) {
             console.error('Error al inicializar la aplicación:', error);
-            alert('Hubo un error al inicializar la aplicación. Revisa la consola.');
         }
     }
 }

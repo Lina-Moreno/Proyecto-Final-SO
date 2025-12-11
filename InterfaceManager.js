@@ -111,6 +111,9 @@ static actualizarGantt(simulador) {
     
     // Actualizar escala de tiempo
     this.actualizarEscalaTiempo(tiempoMax);
+    
+    // ✅ ACTUALIZAR TABLA DE ESTADÍSTICAS
+    this.actualizarTablaEstadisticas(simulador);
 }
 
 static actualizarEscalaTiempo(maxTiempo) {
@@ -284,5 +287,89 @@ static actualizarListaProcesosPersonalizados(procesosEnInventario, procesosAgreg
     
     tabla.appendChild(tbody);
     listaDiv.appendChild(tabla);
+}
+
+/**
+ * ✅ NUEVA FUNCIÓN: Actualizar tabla de estadísticas
+ */
+static actualizarTablaEstadisticas(simulador) {
+    const contenedorStats = document.getElementById('tablaEstadisticas');
+    if (!contenedorStats || !simulador) return;
+    
+    contenedorStats.innerHTML = '';
+    
+    // Solo mostrar si hay procesos terminados
+    const procesosTerminados = simulador.todosLosProcesos.filter(p => p.estado === 'TERMINADO');
+    
+    if (procesosTerminados.length === 0) {
+        const mensaje = document.createElement('div');
+        mensaje.className = 'mensaje-vacio';
+        mensaje.textContent = 'No hay procesos finalizados aún';
+        contenedorStats.appendChild(mensaje);
+        return;
+    }
+    
+    // Crear tabla
+    const tabla = document.createElement('table');
+    tabla.className = 'tabla-estadisticas';
+    
+    // Crear encabezado
+    const thead = document.createElement('thead');
+    thead.innerHTML = `
+        <tr>
+            <th>Proceso</th>
+            <th>Ejecución<br>t</th>
+            <th>Espera</th>
+            <th>Bloqueo</th>
+            <th>Instante<br>fin<br>If</th>
+            <th>Retorno<br>T = If - Ii</th>
+            <th>Tiempo<br>perdido<br>T - t</th>
+            <th>Penalidad<br>Ip = T/t</th>
+            <th>Tiempo<br>respuesta<br>Tr</th>
+        </tr>
+    `;
+    tabla.appendChild(thead);
+    
+    // Crear cuerpo
+    const tbody = document.createElement('tbody');
+    
+    procesosTerminados.forEach(proceso => {
+        const tr = document.createElement('tr');
+        
+        // Calcular estadísticas
+        const Ii = proceso.tiempoLlegada;
+        const If = proceso.tiempoSalida;
+        const t = proceso.tiempoRafaga;
+        const T = If - Ii;
+        const TmenosT = T - t;
+        const Ip = (T / t).toFixed(2);
+        
+        // Tiempo de respuesta = primer tiempo de ejecución - tiempo de llegada
+        const Tr = proceso.tiempoInicioEjecucion !== null ? 
+                   proceso.tiempoInicioEjecucion - Ii : 0;
+        
+        // Tiempo de espera (lo tenemos en proceso.tiempoEspera)
+        const espera = proceso.tiempoEspera || 0;
+        
+        // Calcular tiempo de bloqueo
+        const bloqueo = TmenosT - espera;
+        
+        tr.innerHTML = `
+            <td><strong>${proceso.id}</strong></td>
+            <td>${t}</td>
+            <td>${espera}</td>
+            <td>${bloqueo}</td>
+            <td>${If}</td>
+            <td>${T}</td>
+            <td>${TmenosT}</td>
+            <td>${Ip}</td>
+            <td>${Tr}</td>
+        `;
+        
+        tbody.appendChild(tr);
+    });
+    
+    tabla.appendChild(tbody);
+    contenedorStats.appendChild(tabla);
 }
 }
