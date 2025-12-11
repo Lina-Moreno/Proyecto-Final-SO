@@ -1,8 +1,4 @@
 class InterfaceManager {
-    static init() {
-        console.log('InterfaceManager inicializado');
-    }
-
     
 static actualizarGantt(simulador) {
     const ganttGrid = document.getElementById('ganttGrid');
@@ -15,7 +11,7 @@ static actualizarGantt(simulador) {
         return;
     }
     
-    // Invertir orden: último agregado aparece arriba
+    // último agregado aparece arriba
     const procesosOrdenados = [...simulador.todosLosProcesos].reverse();
     
     let tiempoMax = Math.max(simulador.tiempoActual, 30);
@@ -112,7 +108,7 @@ static actualizarGantt(simulador) {
     // Actualizar escala de tiempo
     this.actualizarEscalaTiempo(tiempoMax);
     
-    // ✅ ACTUALIZAR TABLA DE ESTADÍSTICAS
+    // ACTUALIZAR TABLA DE ESTADÍSTICAS
     this.actualizarTablaEstadisticas(simulador);
 }
 
@@ -122,7 +118,7 @@ static actualizarEscalaTiempo(maxTiempo) {
     
     escalaDiv.innerHTML = '';
     
-    // Crear números desde 0 hasta maxTiempo (inclusive)
+    // Crear números desde 0 hasta maxTiempo
     for (let i = 0; i <= maxTiempo; i++) {
         const numDiv = document.createElement('div');
         numDiv.className = 'escala-num';
@@ -131,9 +127,7 @@ static actualizarEscalaTiempo(maxTiempo) {
     }
 }
 
-    /**
-     * Actualizar cola - Muestra cola unificada (listos + bloqueados)
-     */
+    // Actualizar cola - Muestra cola unificada (listos + bloqueados)
     static actualizarCola(simulador) {
         const colaDiv = document.getElementById('colaVisualizacion');
         if (!colaDiv || !simulador) return;
@@ -204,20 +198,14 @@ static actualizarListaProcesosPersonalizados(procesosEnInventario, procesosAgreg
     if (!listaDiv) return;
     
     listaDiv.innerHTML = '';
-    
-    console.log('Actualizando lista personalizada:');
-    console.log('Inventario:', Array.from(procesosEnInventario.keys()));
-    console.log('Agregados:', Array.from(procesosAgregados));
-    
+
     const procesosArray = Array.from(procesosEnInventario.values());
     
-    // Filtrar SOLO procesos personalizados (no predefinidos)
+    // Filtrar SOLO procesos personalizados 
     const procesosPersonalizados = procesosArray.filter(proceso => {
         const esPredefinido = DataManager.procesosPredefinidos.some(p => p.id === proceso.id);
         return !esPredefinido;
     });
-    
-    console.log('Procesos personalizados encontrados:', procesosPersonalizados.map(p => p.id));
     
     // Si no hay procesos personalizados
     if (procesosPersonalizados.length === 0) {
@@ -263,7 +251,6 @@ static actualizarListaProcesosPersonalizados(procesosEnInventario, procesosAgreg
         const tr = document.createElement('tr');
         
         const estaAgregado = procesosAgregados.has(proceso.id);
-        console.log(`Proceso ${proceso.id}: agregado=${estaAgregado}`);
         
         tr.innerHTML = `
             <td><strong>${proceso.id}</strong></td>
@@ -289,9 +276,7 @@ static actualizarListaProcesosPersonalizados(procesosEnInventario, procesosAgreg
     listaDiv.appendChild(tabla);
 }
 
-/**
- * ✅ NUEVA FUNCIÓN: Actualizar tabla de estadísticas
- */
+
 static actualizarTablaEstadisticas(simulador) {
     const contenedorStats = document.getElementById('tablaEstadisticas');
     if (!contenedorStats || !simulador) return;

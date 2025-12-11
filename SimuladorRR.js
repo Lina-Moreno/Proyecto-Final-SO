@@ -40,10 +40,6 @@ class SimuladorRR extends SimuladorBase {
      */
     agregarACola(proceso) {
         this.cola.push(proceso);
-        console.log(`[RR] ${proceso.id} agregado al final de cola. Cola completa: [${this.cola.map(p => {
-            const bloq = this.infoBloqueados.has(p.id) ? '*B' : '';
-            return p.id + bloq;
-        }).join(', ')}]`);
     }
 
     /**
@@ -117,16 +113,12 @@ class SimuladorRR extends SimuladorBase {
 
         const todosTerminados = this.procesos.every(p => p.estado === 'TERMINADO');
         if (todosTerminados) {
-            console.log(`[T=${this.tiempo}] *** SIMULACIÓN COMPLETADA ***`);
             return false;
         }
-
-        console.log(`\n========== TIEMPO ${this.tiempo} ${this.tiempoActualEsS ? '(DESPACHADOR)' : ''} ==========`);
 
         // --- 1. LLEGADAS en tiempo t ---
         this.procesos.forEach(p => {
             if (p.tiempoLlegada === this.tiempo && p.estado === 'NUEVO') {
-                console.log(`[T=${this.tiempo}] ${p.id} LLEGA a la cola`);
                 p.estado = 'LISTO';
                 if (this.tiempoEjecutado[p.id] === undefined) {
                     this.tiempoEjecutado[p.id] = 0;
@@ -146,7 +138,6 @@ class SimuladorRR extends SimuladorBase {
         desbloqueados.forEach(id => {
             const proceso = this.cola.find(p => p.id === id);
             if (proceso) {
-                console.log(`[T=${this.tiempo}] ${id} DESBLOQUEADO -> mover al final de cola`);
                 proceso.estado = 'LISTO';
                 this.infoBloqueados.delete(id);
                 
@@ -164,7 +155,6 @@ class SimuladorRR extends SimuladorBase {
             this.tiempoActualEsS = true;
             this.proximoS = false;
             
-            console.log(`[T=${this.tiempo}] DESPACHADOR (S) - No ejecutar proceso`);
             this.registrarEstado();
             this.mostrarEstado();
             
@@ -186,7 +176,6 @@ class SimuladorRR extends SimuladorBase {
                     this.ejecutando.tiempoInicioEjecucion = this.tiempo;
                 }
                 
-                console.log(`[T=${this.tiempo}] ${this.ejecutando.id} asignado a CPU (quantum=${this.quantum})`);
             }
         }
 
@@ -201,12 +190,10 @@ class SimuladorRR extends SimuladorBase {
             p.tiempoRestante--;
             this.quantumRestante--;
             
-            console.log(`[T=${this.tiempo}] Ejecutando ${p.id}: acumulado=${this.tiempoEjecutado[p.id]}/${p.tiempoRafaga}, restante=${p.tiempoRestante}, quantum_rest=${this.quantumRestante}`);
 
             // 6.2 Verificar si se bloquea
             if (p.inicioBloqueo > 0 && this.tiempoEjecutado[p.id] === p.inicioBloqueo) {
                 const tiempoDesbloqueo = this.tiempo + p.duracionBloqueo;
-                console.log(`[T=${this.tiempo}] ${p.id} SE BLOQUEA hasta t=${tiempoDesbloqueo} -> vuelve a cola como bloqueado`);
                 p.estado = 'BLOQUEADO';
                 
                 // Agregar a cola como bloqueado
@@ -226,7 +213,6 @@ class SimuladorRR extends SimuladorBase {
                 p.estado = 'TERMINADO';
                 p.tiempoSalida = this.tiempo + 1;
                 this.procesosTerminados.push(p);
-                console.log(`[T=${this.tiempo}] ${p.id} TERMINADO`);
                 this.ejecutando = null;
                 this.proximoS = true;
                 
@@ -237,7 +223,6 @@ class SimuladorRR extends SimuladorBase {
 
             // 6.4 Verificar si acaba quantum
             if (this.quantumRestante === 0) {
-                console.log(`[T=${this.tiempo}] ${p.id} agotó quantum -> al final de cola`);
                 p.estado = 'LISTO';
                 this.agregarACola(p);
                 this.ejecutando = null;
@@ -263,7 +248,6 @@ class SimuladorRR extends SimuladorBase {
             return p.id + bloq;
         }).join(',') || '-';
         const cpuStr = this.ejecutando ? this.ejecutando.id : (this.tiempoActualEsS ? 'S' : '-');
-        console.log(`↓ Cola unificada: [${colaStr}], CPU: [${cpuStr}]`);
     }
 
     /**

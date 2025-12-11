@@ -88,6 +88,43 @@ body {
     align-items: center;
 }
 
+#quantumControl {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 15px;
+    background: #f0f8ff;
+    border: 2px solid #0078ff;
+    border-radius: 5px;
+}
+
+#quantumControl label {
+    font-weight: bold;
+    color: #0078ff;
+    margin: 0;
+}
+
+#inputQuantum {
+    width: 60px;
+    padding: 5px 8px;
+    border: 1px solid #0078ff;
+    border-radius: 3px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#inputQuantum:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 120, 255, 0.3);
+}
+
+#inputQuantum:disabled {
+    background: #e0e0e0;
+    cursor: not-allowed;
+}
+
 .btn-control {
     padding: 10px 20px;
     border: none;

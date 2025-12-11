@@ -2,14 +2,14 @@ class ModalManager {
     static abrirModalProceso() {
         const modal = document.getElementById('modalProceso');
         if (modal) {
-            modal.classList.add('mostrar'); // ← CORREGIDO
+            modal.classList.add('mostrar'); 
         }
     }
 
     static cerrarModalProceso() {
         const modal = document.getElementById('modalProceso');
         if (modal) {
-            modal.classList.remove('mostrar'); // ← CORREGIDO
+            modal.classList.remove('mostrar');
         }
         const form = document.getElementById('formProceso');
         if (form) {
@@ -17,9 +17,6 @@ class ModalManager {
         }
     }
 static guardarProceso() {
-    // NO verificar SimulacionManager.simulador aquí
-    // porque solo estamos creando el proceso, no agregándolo a simulación
-    
     const nombre = document.getElementById('inputNombre').value.trim().toUpperCase();
     const llegada = parseInt(document.getElementById('inputLlegada').value);
     const rafaga = parseInt(document.getElementById('inputRafaga').value);
@@ -34,7 +31,7 @@ static guardarProceso() {
         return;
     }
 
-    // ✅ VALIDACIONES DE LÓGICA
+    // VALIDACIONES DE LÓGICA
     if (llegada < 0) {
         alert('El tiempo de llegada no puede ser negativo');
         return;
@@ -52,10 +49,9 @@ static guardarProceso() {
         return;
     }
 
-    // CREAR proceso pero NO agregarlo a simulación
-    const proceso = new Proceso(nombre, llegada, rafaga, inicioBloqueo, duracionBloqueo);
+    const proceso = new proceso(nombre, llegada, rafaga, inicioBloqueo, duracionBloqueo);
     
-    // Guardar en inventario para mostrarlo en UI
+    // Guardar en "inventario" para mostrarlo en UI
     // Necesitamos crear este método en SimulacionManager
     const guardado = SimulacionManager.agregarProcesoAlInventario(proceso);
     

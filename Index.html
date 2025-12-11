@@ -31,9 +31,17 @@
         <button class="btn-control btn-secondary" id="btnAgregarProceso" onclick="ModalManager.abrirModalProceso()">Agregar Proceso</button>
         <button class="btn-control btn-danger" id="btnReiniciar" onclick="SimulacionManager.reiniciarSimulacion()">Reiniciar</button>
         <div class="info-tiempo">Tiempo: <span id="tiempoActual">0</span></div>
+        
+        <!-- NUEVO: Input para Quantum (solo visible en RR) -->
+        <div id="quantumControl" style="display: none; margin-left: 20px; align-items: center; gap: 10px;">
+            <label for="inputQuantum" style="font-weight: bold;">Quantum:</label>
+            <input type="number" id="inputQuantum" min="1" max="10" value="2" 
+                   style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            <button class="btn-control btn-secondary" onclick="SimulacionManager.actualizarQuantum()">Aplicar</button>
+        </div>
     </div>
 
-    <!-- ✅ CONTENEDOR CON TABLAS LADO A LADO -->
+    <!-- CONTENEDOR CON TABLAS LADO A LADO -->
     <div class="contenedor-tablas-procesos">
         <!-- PROCESOS PREDEFINIDOS -->
         <div class="procesos-predefinidos">
@@ -49,11 +57,11 @@
             </div>
         </div>
 
-        <!-- ✅ TABLA DE ESTADÍSTICAS -->
+        <!-- TABLA DE ESTADÍSTICAS -->
         <div class="procesos-predefinidos">
             <h3>Estadísticas de Procesos:</h3>
             <div class="lista-predefinidos" id="tablaEstadisticas">
-                <div class="mensaje-vacio">-</div>
+                <div class="mensaje-vacio">Aún no hay procesos finalizados</div>
             </div>
         </div>
     </div>

@@ -1,21 +1,18 @@
 class Main {
-    static init() {
-        console.log('Inicializando aplicación...');
-        
+    static init() {        
         try {
             // Inicializar los managers
             DataManager.cargarProcesosPredefinidosEnUI();
             SimulacionManager.init();
             InterfaceManager.init();
-            ModalManager.init(); // ← FALTABA INICIALIZAR EL MODAL MANAGER
+            ModalManager.init(); 
             
             // Asegurar que el modal esté cerrado al inicio
             const modal = document.getElementById('modalProceso');
             if (modal) {
-                modal.classList.remove('mostrar'); // ← CORRECCIÓN: usar classList, NO style.display
+                modal.classList.remove('mostrar'); 
             }
             
-            console.log('Aplicación inicializada correctamente');
         } catch (error) {
             console.error('Error al inicializar la aplicación:', error);
         }

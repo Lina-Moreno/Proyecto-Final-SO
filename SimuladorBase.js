@@ -1,7 +1,4 @@
-/**
- * SimuladorBase - Implementa exactamente el pseudocódigo especificado
- * CORRECCIÓN: Registrar ANTES de ejecutar en el siguiente paso
- */
+
 class SimuladorBase {
     constructor() {
         this.tiempo = 0;
@@ -15,9 +12,6 @@ class SimuladorBase {
         this.maxTiempo = 100;
     }
 
-    /**
-     * Getters para compatibilidad con InterfaceManager
-     */
     get tiempoActual() {
         return this.tiempo;
     }
@@ -38,16 +32,12 @@ class SimuladorBase {
         return this.bloqueados.map(([p]) => p);
     }
 
-    /**
-     * Agregar un proceso al simulador
-     */
+
     agregarProceso(proceso) {
         if (this.procesos.some(p => p.id === proceso.id)) {
             console.warn(`El proceso ${proceso.id} ya existe`);
             return false;
         }
-
-        console.log(`[AGREGAR] ${proceso.id}: llegada=${proceso.tiempoLlegada}, rafaga=${proceso.tiempoRafaga}, bloqueo@${proceso.inicioBloqueo}x${proceso.duracionBloqueo}`);
         
         this.procesos.push(proceso);
         this.tiempoEjecutado[proceso.id] = 0;
@@ -55,16 +45,11 @@ class SimuladorBase {
         return true;
     }
 
-    /**
-     * Agregar proceso a la cola (implementado por subclases)
-     */
     agregarACola(proceso) {
         throw new Error("Método 'agregarACola' debe ser implementado por la subclase");
     }
 
-    /**
-     * PASO 1: Registrar estado ACTUAL (ANTES de cambios)
-     */
+
     paso1_RegistrarEstado() {
         // Registrar proceso en ejecución
         if (this.ejecutando && this.ejecutando.estado === 'EJECUCION') {
@@ -103,32 +88,23 @@ class SimuladorBase {
         }
     }
 
-    /**
-     * PASO 2: Añadir procesos que llegan en este tiempo
-     */
     paso2_AnadirLlegadas() {
         this.procesos.forEach(p => {
             if (p.tiempoLlegada === this.tiempo && p.estado === 'NUEVO') {
-                console.log(`[T=${this.tiempo}] ${p.id} LLEGA a la cola`);
                 p.estado = 'LISTO';
                 this.agregarACola(p);
             }
         });
     }
 
-    /**
-     * PASO 3: Actualizar procesos bloqueados y desbloquear si es necesario
-     */
     paso3_ActualizarBloqueados() {
         for (let i = this.bloqueados.length - 1; i >= 0; i--) {
             const [proceso, tRestante] = this.bloqueados[i];
             
             // Decrementar tiempo restante
             const nuevoTiempoRestante = tRestante - 1;
-            console.log(`[T=${this.tiempo}] ${proceso.id} bloqueado: tRestante=${nuevoTiempoRestante}`);
             
             if (nuevoTiempoRestante === 0) {
-                console.log(`[T=${this.tiempo}] ${proceso.id} DESBLOQUEADO -> cola`);
                 proceso.estado = 'LISTO';
                 this.agregarACola(proceso);
                 this.bloqueados.splice(i, 1);
@@ -149,13 +125,9 @@ class SimuladorBase {
             if (this.ejecutando.tiempoInicioEjecucion === null) {
                 this.ejecutando.tiempoInicioEjecucion = this.tiempo;
             }
-            console.log(`[T=${this.tiempo}] ${this.ejecutando.id} asignado a CPU`);
         }
     }
 
-    /**
-     * PASO 5: Ejecutar una unidad de CPU
-     */
 paso5_EjecutarUnidad() {
     if (this.ejecutando === null) {
         return;
@@ -167,14 +139,11 @@ paso5_EjecutarUnidad() {
     this.tiempoEjecutado[p.id]++;
     p.tiempoRestante--;
     
-    console.log(`[T=${this.tiempo}] Ejecutando ${p.id}: ejecutado=${this.tiempoEjecutado[p.id]}/${p.tiempoRafaga}, restante=${p.tiempoRestante}`);
 
     // Verificar si debe bloquearse AHORA
     if (p.inicioBloqueo > 0 && this.tiempoEjecutado[p.id] === p.inicioBloqueo) {
-        console.log(`[T=${this.tiempo}] ${p.id} SE BLOQUEA por ${p.duracionBloqueo} unidades`);
         p.estado = 'BLOQUEADO';
         
-        // ✅ CORRECCIÓN: +1 para que el desbloqueo sea correcto
         this.bloqueados.push([p, p.duracionBloqueo + 1]);
         
         this.ejecutando = null;
@@ -186,7 +155,6 @@ paso5_EjecutarUnidad() {
         p.estado = 'TERMINADO';
         p.tiempoSalida = this.tiempo + 1;
         this.procesosTerminados.push(p);
-        console.log(`[T=${this.tiempo}] ${p.id} TERMINADO`);
         this.ejecutando = null;
     }
 }
@@ -210,14 +178,9 @@ paso() {
 
     const todosTerminados = this.procesos.every(p => p.estado === 'TERMINADO');
     if (todosTerminados) {
-        console.log(`[T=${this.tiempo}] *** SIMULACIÓN COMPLETADA ***`);
         return false;
     }
 
-    console.log(`\n========== TIEMPO ${this.tiempo} ==========`);
-
-    // ✅ NUEVO ORDEN (según tu pseudocódigo):
-    
     // 1. Llegadas
     this.paso2_AnadirLlegadas();
     
@@ -227,7 +190,7 @@ paso() {
     // 3. Asignar CPU si está libre
     this.paso4_AsignarSiNecesario();
     
-    // ✅ AHORA SÍ registrar el estado (después de asignar)
+    // HORA SÍ registrar el estado (después de asignar)
     this.paso1_RegistrarEstado();
     
     // 4. Ejecutar
@@ -240,8 +203,6 @@ paso() {
     const colaStr = this.cola.map(p => p.id).join(',') || '-';
     const bloqStr = this.bloqueados.map(([p, t]) => `${p.id}(${t})`).join(',') || '-';
     const cpuStr = this.ejecutando ? this.ejecutando.id : '-';
-    console.log(`↓ Cola: [${colaStr}], Bloqueados: [${bloqStr}], CPU: [${cpuStr}]`);
-
     // Avanzar tiempo
     this.tiempo++;
 
@@ -252,8 +213,6 @@ paso() {
  * Resetear simulación
  */
 reset() {
-    console.log(`[RESET] Limpiando ${this.procesos.length} procesos`);
-    
     this.tiempo = 0;
     this.cola = [];
     this.ejecutando = null;
@@ -272,13 +231,12 @@ hayActividadRestante() {
         return false;
     }
 
-    // ✅ AGREGAR ESTA VERIFICACIÓN:
     // Verificar si hay procesos que aún no han llegado
     const hayProcesosNuevos = this.procesos.some(p => p.estado === 'NUEVO');
 
     return this.cola.length > 0 ||
            this.bloqueados.length > 0 ||
            this.ejecutando !== null ||
-           hayProcesosNuevos; // ← CRÍTICO: considerar procesos futuros
+           hayProcesosNuevos; 
 }
 }

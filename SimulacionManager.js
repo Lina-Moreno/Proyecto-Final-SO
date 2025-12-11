@@ -5,12 +5,18 @@ class SimulacionManager {
     static procesosAgregados = new Set();
     static procesosEnInventario = new Map();
 
-static iniciarSimulador(algoritmo) {
-    console.log('Iniciando simulador con algoritmo:', algoritmo);
-    
+static iniciarSimulador(algoritmo) {    
     document.getElementById('menuPrincipal').style.display = 'none';
     document.getElementById('simulador').style.display = 'block';
     document.getElementById('tituloAlgoritmo').textContent = algoritmo;
+
+    // Mostrar y ocultar control de quantum según el algoritmo
+    const quantumControl = document.getElementById('quantumControl');
+    if (algoritmo === 'RR') {
+        quantumControl.style.display = 'flex';
+    } else {
+        quantumControl.style.display = 'none';
+    }
     
     this.simulador = this.crearSimulador(algoritmo);
     
@@ -35,7 +41,6 @@ static iniciarSimulador(algoritmo) {
         
         this.procesosEnInventario.set(proceso.id, proceso);
         this.actualizarInterfaz();
-        console.log(`Proceso ${proceso.id} agregado al inventario`);
         return true;
     }
 
@@ -68,15 +73,12 @@ static iniciarSimulador(algoritmo) {
         if (agregado) {
             this.procesosAgregados.add(id);
             this.actualizarInterfaz();
-            console.log(`Proceso ${id} agregado a simulación`);
             return true;
         }
         return false;
     }
 
-static agregarProcesoPredefinido(id) {
-    console.log('Agregando proceso predefinido:', id);
-    
+static agregarProcesoPredefinido(id) {    
     if (!this.simulador) {
         alert('Por favor inicia un simulador primero');
         return;
@@ -106,7 +108,6 @@ static agregarProcesoPredefinido(id) {
             this.procesosAgregados.add(id);
             this.actualizarBotonesPredefinidos();
             this.actualizarInterfaz();
-            console.log(`Proceso ${id} agregado correctamente`);
         } else {
             console.warn(`No se pudo agregar el proceso ${id}`);
         }
@@ -130,7 +131,7 @@ static actualizarBotonesPredefinidos() {
     const botones = document.querySelectorAll('[id^="btnProc"]');
     
     botones.forEach(btn => {
-        const idProceso = btn.id.replace('btnProc', '');
+        const idProceso = btn.id.replace('btnProc', '').replace('Custom', '');
         btn.disabled = this.procesosAgregados.has(idProceso);
         
         if (btn.disabled) {
@@ -144,6 +145,36 @@ static actualizarBotonesPredefinidos() {
         }
     });
 }
+
+    //  Actualizar quantum
+    static actualizarQuantum() {
+        if (!this.simulador) {
+            alert('No hay simulador activo');
+            return;
+        }
+        
+        if (this.simulador.constructor.name !== 'SimuladorRR') {
+            alert('El quantum solo aplica para el algoritmo Round Robin');
+            return;
+        }
+        
+        if (this.simulacionEnCurso) {
+            alert('No puedes cambiar el quantum mientras la simulación está en curso. Pausa o reinicia primero.');
+            return;
+        }
+        
+        const inputQuantum = document.getElementById('inputQuantum');
+        const nuevoQuantum = parseInt(inputQuantum.value);
+        
+        if (isNaN(nuevoQuantum) || nuevoQuantum < 1) {
+            alert('El quantum debe ser un número mayor o igual a 1');
+            return;
+        }
+        
+        this.simulador.quantum = nuevoQuantum;
+        this.simulador.quantumRestante = nuevoQuantum;
+        alert(`Quantum actualizado a ${nuevoQuantum}`);
+    }
 
     static toggleSimulacion() {
         if (!this.simulador || !this.simulador.todosLosProcesos || this.simulador.todosLosProcesos.length === 0) {
@@ -163,9 +194,14 @@ static actualizarBotonesPredefinidos() {
     }
 
     static iniciarSimulacion() {
-        console.log('Iniciando simulación...');
         this.simulacionEnCurso = true;
         document.getElementById('btnAgregarProceso').disabled = true;
+        
+        //  Deshabilitar input de quantum durante simulación
+        const inputQuantum = document.getElementById('inputQuantum');
+        if (inputQuantum) {
+            inputQuantum.disabled = true;
+        }
         
         if (!this.simulador) {
             console.error('No hay simulador inicializado');
@@ -177,17 +213,13 @@ static actualizarBotonesPredefinidos() {
             this.simulacionEnCurso = false;
             return;
         }
-        
-        console.log(`Iniciando simulación con ${this.simulador.todosLosProcesos.length} procesos`);
-        
+                
         this.tiempoIntervalo = setInterval(() => {
             if (!this.simulador) {
-                console.log('Simulador eliminado, deteniendo intervalo');
                 clearInterval(this.tiempoIntervalo);
                 return;
             }
             
-            console.log(`\n=== Intervalo T=${this.simulador.tiempoActual} ===`);
             const continua = this.simulador.paso();
             
             InterfaceManager.actualizarGantt(this.simulador);
@@ -200,7 +232,6 @@ static actualizarBotonesPredefinidos() {
                 `Procesos terminados: ${terminados}/${total}`;
             
             if (!continua) {
-                console.log('Simulación finalizada normalmente');
                 this.finalizarSimulacion();
             }
         }, 1000);
@@ -210,6 +241,12 @@ static actualizarBotonesPredefinidos() {
         clearInterval(this.tiempoIntervalo);
         this.simulacionEnCurso = false;
         document.getElementById('btnAgregarProceso').disabled = false;
+        
+        // Habilitar input de quantum al pausar
+        const inputQuantum = document.getElementById('inputQuantum');
+        if (inputQuantum) {
+            inputQuantum.disabled = false;
+        }
     }
 
     static detenerSimulacion() {
@@ -223,26 +260,35 @@ static actualizarBotonesPredefinidos() {
         document.getElementById('btnPlay').disabled = false;
         document.getElementById('btnAgregarProceso').disabled = false;
         document.getElementById('estadoSimulacion').textContent = 'Simulación finalizada';
+        
+        // Habilitar input de quantum al finalizar
+        const inputQuantum = document.getElementById('inputQuantum');
+        if (inputQuantum) {
+            inputQuantum.disabled = false;
+        }
     }
 
 static reiniciarSimulacion() {
-    console.log('Reiniciando simulación');
     
     this.detenerSimulacion();
     this.simulacionEnCurso = false;
     
     this.procesosAgregados.clear();
-    console.log('✅ procesosAgregados limpiado');
     
     const algoritmo = document.getElementById('tituloAlgoritmo').textContent;
     this.simulador = this.crearSimulador(algoritmo);
-    console.log(`✅ Nuevo simulador ${algoritmo} creado`);
     
     document.getElementById('tiempoActual').textContent = '0';
     document.getElementById('btnPlay').textContent = 'Iniciar';
     document.getElementById('btnPlay').disabled = false;
     document.getElementById('btnAgregarProceso').disabled = false;
     document.getElementById('estadoSimulacion').textContent = 'Simulación reiniciada - Agrega procesos';
+    
+    // Habilitar input de quantum al reiniciar
+    const inputQuantum = document.getElementById('inputQuantum');
+    if (inputQuantum) {
+        inputQuantum.disabled = false;
+    }
     
     DataManager.cargarProcesosPredefinidosEnUI();
     
@@ -255,28 +301,39 @@ static reiniciarSimulacion() {
         InterfaceManager.actualizarGantt(this.simulador);
         InterfaceManager.actualizarCola(this.simulador);
         
-        console.log('✅ Interfaz actualizada completamente');
     }, 150);
     
-    console.log('🔄 Simulación reiniciada correctamente');
 }
 
 static crearSimulador(algoritmo) {
+    let simulador;
+    
     switch(algoritmo) {
         case 'FCFS':
-            return new SimuladorFCFS();
+            simulador = new SimuladorFCFS();
+            break;
         
         case 'SJF':
-            return new SimuladorSJF();
+            simulador = new SimuladorSJF();
+            break;
         
         case 'SRTF':
-            return new SimuladorSRTF();
+            simulador = new SimuladorSRTF();
+            break;
         
         case 'RR':
-            return new SimuladorRR();
+            // Obtener quantum del input al crear el simulador
+            const inputQuantum = document.getElementById('inputQuantum');
+            const quantum = inputQuantum ? parseInt(inputQuantum.value) : 2;
+            simulador = new SimuladorRR();
+            simulador.quantum = quantum;
+            simulador.quantumRestante = quantum;
+            break;
         
         default:
-            return new SimuladorFCFS();
+            simulador = new SimuladorFCFS();
     }
+    
+    return simulador;
 }
 }

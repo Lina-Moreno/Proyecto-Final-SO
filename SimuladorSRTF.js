@@ -70,7 +70,6 @@ class SimuladorSRTF extends SimuladorBase {
         const colaStr = this.cola.map(p => `${p.id}(${p.tiempoRestante})`).join(',') || '-';
         const bloqStr = this.bloqueados.map(([p, t]) => `${p.id}(${t})`).join(',') || '-';
         const cpuStr = this.ejecutando ? `${this.ejecutando.id}(${this.ejecutando.tiempoRestante})` : '-';
-        console.log(`↓ Cola: [${colaStr}], Bloqueados: [${bloqStr}], CPU: [${cpuStr}]`);
     }
 
     /**
@@ -81,16 +80,13 @@ class SimuladorSRTF extends SimuladorBase {
         if (this.procesos.length === 0) return false;
 
         if (this.procesos.every(p => p.estado === 'TERMINADO')) {
-            console.log(`[T=${this.tiempo}] *** SIMULACIÓN COMPLETADA ***`);
             return false;
         }
 
-        console.log(`\n========== TIEMPO ${this.tiempo} ==========`);
 
         // 1. PROCESAR LLEGADAS
         this.procesos.forEach(p => {
             if (p.tiempoLlegada === this.tiempo && p.estado === 'NUEVO') {
-                console.log(`[T=${this.tiempo}] ${p.id} LLEGA a la cola`);
                 p.estado = 'LISTO';
                 this.agregarACola(p);
             }
@@ -102,7 +98,6 @@ class SimuladorSRTF extends SimuladorBase {
             const nuevoTiempoRestante = tRestante - 1;
             
             if (nuevoTiempoRestante === 0) {
-                console.log(`[T=${this.tiempo}] ${proceso.id} DESBLOQUEADO -> cola`);
                 proceso.estado = 'LISTO';
                 this.agregarACola(proceso);
                 this.bloqueados.splice(i, 1);
@@ -115,7 +110,6 @@ class SimuladorSRTF extends SimuladorBase {
         if (this.ejecutando && this.cola.length > 0) {
             const procesoMasCorto = this.cola[0];
             if (procesoMasCorto.tiempoRestante < this.ejecutando.tiempoRestante) {
-                console.log(`[T=${this.tiempo}] ⚡ EXPROPIACIÓN: ${this.ejecutando.id}(${this.ejecutando.tiempoRestante}) -> ${procesoMasCorto.id}(${procesoMasCorto.tiempoRestante})`);
                 this.ejecutando.estado = 'LISTO';
                 this.agregarACola(this.ejecutando);
                 this.asignarACPU(this.cola.shift());
@@ -125,7 +119,6 @@ class SimuladorSRTF extends SimuladorBase {
         // 4. ASIGNAR CPU SI ESTÁ LIBRE
         if (!this.ejecutando && this.cola.length > 0) {
             this.asignarACPU(this.cola.shift());
-            console.log(`[T=${this.tiempo}] ${this.ejecutando.id} asignado a CPU`);
         }
 
         // 5. REGISTRAR EVENTOS
@@ -137,10 +130,7 @@ class SimuladorSRTF extends SimuladorBase {
             this.tiempoEjecutado[p.id]++;
             p.tiempoRestante--;
             
-            console.log(`[T=${this.tiempo}] Ejecutando ${p.id}: ejecutado=${this.tiempoEjecutado[p.id]}/${p.tiempoRafaga}, restante=${p.tiempoRestante}`);
-
             if (p.inicioBloqueo > 0 && this.tiempoEjecutado[p.id] === p.inicioBloqueo) {
-                console.log(`[T=${this.tiempo}] ${p.id} SE BLOQUEA por ${p.duracionBloqueo} unidades`);
                 p.estado = 'BLOQUEADO';
                 this.bloqueados.push([p, p.duracionBloqueo + 1]);
                 this.ejecutando = null;
@@ -148,7 +138,6 @@ class SimuladorSRTF extends SimuladorBase {
                 p.estado = 'TERMINADO';
                 p.tiempoSalida = this.tiempo + 1;
                 this.procesosTerminados.push(p);
-                console.log(`[T=${this.tiempo}] ${p.id} TERMINADO`);
                 this.ejecutando = null;
             }
         }
